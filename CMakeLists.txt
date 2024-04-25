@@ -1,12 +1,15 @@
 cmake_minimum_required(VERSION 3.11)
 
-project(Hellov)
+project(globalProject)
 
-find_package(fmt CONFIG REQUIRED)
-find_package(Poco REQUIRED COMPONENTS Foundation Net)
+add_subdirectory(example1)
+add_subdirectory(example2)
 
-add_executable(Hellov main.cpp)
+# find_package(fmt CONFIG REQUIRED)
+# find_package(Poco REQUIRED COMPONENTS Foundation Net)
 
-target_link_libraries(Hellov PRIVATE fmt::fmt)
+# add_executable(Hellov main.cpp)
 
-target_link_libraries(Hellov PRIVATE Poco::Foundation Poco::Net)
+# target_link_libraries(Hellov PRIVATE fmt::fmt)
+
+# target_link_libraries(Hellov PRIVATE Poco::Foundation Poco::Net)
