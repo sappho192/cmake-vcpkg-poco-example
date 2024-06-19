@@ -1,3 +1,5 @@
+/* Echo client using SocketReactor */
+
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -22,7 +24,7 @@ private:
 public:
     Session(Poco::Net::StreamSocket &socket, Poco::Net::SocketReactor &reactor) : _socket(socket), _reactor(reactor)
     {
-        cout << "Session: peerAddress=" << _peerAddress << endl;
+        cout << "Connection success" << endl;
 
         _reactor.addEventHandler(_socket, Poco::Observer<Session, Poco::Net::ReadableNotification>(*this, &Session::onReadable));
 
@@ -56,7 +58,7 @@ public:
 
         if (n > 0)
         {
-            cout << Poco::format("Session: peerAddress=%s, %s\n", _peerAddress, buffer) << endl;
+            cout << "Message from the server: \"" << buffer << '\"' << endl;
 
             if (_sendCount < 7)
             {
@@ -76,7 +78,7 @@ public:
         }
         else
         {
-            cout << "Session: peerAddress=" << _peerAddress << " disconnected" << endl;
+            cout << "OnReadable disconnected..." << endl;
             delete this;
         }
     }
@@ -86,11 +88,11 @@ public:
         char szMessage[256] = {
             0,
         };
-        sprintf(szMessage, "Send Message");
+        sprintf(szMessage, "Hello server! %d", _sendCount);
         int nMsgLen = (int)strlen(szMessage);
         _socket.sendBytes(szMessage, nMsgLen);
 
-        cout << "Sent" << szMessage << endl;
+        cout << "Sent \"" << szMessage << '\"' << endl;
     }
 };
 
@@ -104,7 +106,7 @@ int main()
     reactor.run();
 
     cout << "Done" << endl;
-    getchar();
+    // getchar();
 
     return 0;
 }

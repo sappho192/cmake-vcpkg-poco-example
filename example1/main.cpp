@@ -1,3 +1,5 @@
+/* Echo server using SocketReactor, multithreading */
+
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -21,20 +23,20 @@ public:
     Session(Poco::Net::StreamSocket &socket, Poco::Net::SocketReactor &reactor) : _socket(socket), _reactor(reactor)
     {
         _peerAddress = socket.peerAddress().toString();
-        cout << Poco::format("Session: peerAddress=%s\n", _peerAddress) << endl;
+        cout << "Session: peerAddress=" << _peerAddress << endl;
 
         _reactor.addEventHandler(_socket, Poco::Observer<Session, Poco::Net::ReadableNotification>(*this, &Session::onReadable));
 
-        // Poco::Thread::sleep(10000);
+        // Poco::Thread::sleep(3000);
     }
 
     ~Session()
     {
-        cout << Poco::format("~Session: peerAddress=%s\n", _peerAddress) << endl;
+        cout << "~Session: peerAddress=" << _peerAddress << endl;
 
         _reactor.removeEventHandler(_socket, Poco::Observer<Session, Poco::Net::ReadableNotification>(*this, &Session::onReadable));
 
-        // Poco::Thread::sleep(10000);
+        // Poco::Thread::sleep(3000);
     }
 
     void onReadable(Poco::Net::ReadableNotification *pNf)
@@ -47,18 +49,22 @@ public:
         int n = _socket.receiveBytes(buffer, sizeof(buffer));
         if (n > 0)
         {
-            cout << Poco::format("Session: peerAddress=%s, %s\n", _peerAddress, buffer) << endl;
+            cout << "Message from the session: " << _peerAddress << endl;
 
             char szSendMessage[256] = {
                 0,
             };
 
-            sprintf(szSendMessage, "RE:%s", buffer);
+            // sprintf(szSendMessage, "Reply: %s", buffer);
+            sprintf(szSendMessage, "Hello client!");
             int nMsgLen = (int)strlen(szSendMessage);
 
             _socket.sendBytes(szSendMessage, nMsgLen);
 
-            Poco::Thread::sleep(10000);
+            // The client will be allocated per thread.
+            // If some clients are connected to the different threads,
+            // they don't interfere with each other.
+            Poco::Thread::sleep(1000);
 
             cout << "Finished wating onReadable " << buffer << endl;
         }
