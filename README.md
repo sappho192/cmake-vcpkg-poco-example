@@ -2,6 +2,11 @@
 
 Example POCO project managed with CMake and vcpkg
 
+> [!WARNING]  
+> This repository has been discontinued.  
+> If you want to find the better example, please check [[sappho192/POCOExercise](https://github.com/sappho192/POCOExercise)].  
+> You can also create repository from the template [[sappho192/CppCMakeVcpkgTemplate](https://github.com/sappho192/CppCMakeVcpkgTemplate)].  
+
 # How to build
 
 ## Setup vcpkg
